@@ -3329,8 +3329,14 @@ def l1_loss(
             "Please ensure they have the same size.",
             stacklevel=2,
         )
+    
     if size_average is not None or reduce is not None:
         reduction = _Reduction.legacy_get_string(size_average, reduce)
+
+    if(_Reduction.get_enum(reduction) == 2):
+        raise ValueError(
+                f"Cannat use sum reduction for this recitation."
+            )
 
     expanded_input, expanded_target = torch.broadcast_tensors(input, target)
     return torch._C._nn.l1_loss(expanded_input, expanded_target, _Reduction.get_enum(reduction))
